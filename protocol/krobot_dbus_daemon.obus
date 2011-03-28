@@ -1,0 +1,26 @@
+(*
+ * krobot_dbus_daemon.obus
+ * -----------------------
+ * Copyright : (c) 2010, Jeremie Dimino <jeremie@dimino.org>
+ * Licence   : BSD3
+ *
+ * This file is a part of [kro]bot.
+ *)
+
+(** Krobot daemon interface *)
+
+(** This file contains the D-Bus interface implemented by all daemon
+    running on the robot *)
+
+interface fr.krobot.Daemon {
+  (**
+   * Gracefully shutdowns the krobot's driver.
+   *)
+  method shutdown : () -> ()
+
+  (**
+   * Send warnings and erros through D-Bus so they can be shown to the user,
+   * for example in the controller.
+   *)
+  signal log : (message : string)
+}

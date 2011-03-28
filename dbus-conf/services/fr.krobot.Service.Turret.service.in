@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=fr.krobot.Service.Turret
+Exec=@PREFIX@/bin/krobot-service-turret

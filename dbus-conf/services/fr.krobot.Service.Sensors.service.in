@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=fr.krobot.Service.Sensors
+Exec=@PREFIX@/bin/krobot-service-sensors

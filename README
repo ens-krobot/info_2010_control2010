@@ -1,0 +1,22 @@
+Organisation des dossiers:
+
+* "card-tools" contient des outils pour les cartes usb, notamment pour
+  flasher les firmwares
+
+* "clients" contient les divers programmes pour monitorer et
+  controller le robot
+
+* "common" contient les modules partagés par plusieurs composantes du
+  robot
+
+* "driver" contient le driver qui accède au cartes usb
+
+* "lib-krobot" contient la librairie cliente pour utiliser le robot,
+  qui se connecte au driver via D-Bus
+
+* "services" contient des services tels que l'arrêt des moteurs en cas
+  de colision ou le logging d'un match
+
+* "tools" contient divers outils
+
+* "www" contient une interface web pour le krobot

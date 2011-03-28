@@ -1,0 +1,94 @@
+(*
+ * krobot_dbus_motors.obus
+ * -----------------------
+ * Copyright : (c) 2010, Jeremie Dimino <jeremie@dimino.org>
+ * Licence   : BSD3
+ *
+ * This file is a part of [kro]bot.
+ *)
+
+(** Control of the robot's motors *)
+
+interface fr.krobot.Service.Motors {
+  (**
+   * Result of a movement.
+   *)
+  enum move_result : uint32 {
+    (**
+     * The movement successfully terminated.
+     *)
+    0: success
+
+    (**
+     * The movement has been stopped.
+     *)
+    1: stopped
+
+    (**
+     * Movements in this direction are currently inhibited.
+     *)
+    2: inhibited
+
+    (**
+     * Another movement has been started before the end of the movement.
+     *)
+    3: replaced
+  }
+
+  (**
+   * Turn the robot by the given angle. [accomplished] contains
+   * the angle the robot really turned, even if the turn failed.
+   *)
+  method turn : (angle : double, velocity : double, acceleration : double) -> (result : move_result, accomplished : double)
+    with {
+      default.angle = "0.785398163397448279"
+      default.velocity = "0.4"
+      default.acceleration = "0.8"
+    }
+
+  (**
+   * Move the robot by the given distance. [accomplished] contains
+   * the distance the robot really moved, even if the move failed.
+   *)
+  method move : (distance : double, velocity : double, acceleration : double) -> (result : move_result, accomplished : double)
+    with {
+      default.distance = "0.1"
+      default.velocity = "0.4"
+      default.acceleration = "0.8"
+    }
+
+  (**
+   * How to stop a motor.
+   *)
+  enum stop_mode : uint32 {
+    0: off
+    1: abrupt
+    2: smooth
+  }
+
+  (**
+   * Stop the motors.
+   *)
+  method stop: (mode : stop_mode) -> ()
+    with {
+      default.mode = "2"
+    }
+
+  (**
+   * Set motors velocities for the given amount of time.
+   *)
+  method set_velocities : (velocity_r : double, velocity_l : double, duration : double) -> ()
+
+  (**
+   * Are motors currently inhibited.
+   *)
+  property_r inhibited_forward : boolean
+  property_r inhibited_backward : boolean
+
+  (**
+   * Inhibit motors for the given amount of time
+   *)
+  method inhibit_forward : (duration : double) -> ()
+  method inhibit_backward : (duration : double) -> ()
+}
+

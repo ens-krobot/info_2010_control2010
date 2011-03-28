@@ -1,0 +1,27 @@
+(*
+ * krobot_dbus_claws.obus
+ * ----------------------
+ * Copyright : (c) 2010, Jeremie Dimino <jeremie@dimino.org>
+ * Licence   : BSD3
+ *
+ * This file is a part of [kro]bot.
+ *)
+
+(** Control of the gate at the back of the robot *)
+
+interface fr.krobot.Service.Claws {
+  (**
+   * Enable the claws. They are initially disabled. When disabled,
+   * commands are ignored.
+   *)
+  method enable : () -> ()
+  method disable : () -> ()
+
+  method open : () -> ()
+  method close : () -> ()
+
+  (**
+   * Put the claws in a position to capture a ball.
+   *)
+  method take : () -> ()
+}

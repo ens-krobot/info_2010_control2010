@@ -1,0 +1,178 @@
+body {
+    color: black;
+    font: small Arial, Verdana, sans-serif
+}
+
+a:visited {
+    color: #99F
+}
+
+a:active {
+    color: gray
+}
+
+a:hover {
+    text-decoration: none
+}
+
+address {
+    font-size: xx-small;
+    text-align: right
+}
+
+#page {
+    width: 980px;
+    margin: 1em auto
+}
+
+#sidebar {
+    float: left;
+    width: 200px
+}
+
+#content {
+    float: right;
+    width: 760px;
+    margin-left: 20px
+}
+
+.external {
+    padding-right: 15px;
+    background: transparent url('external.png') no-repeat right
+}
+
+#paramMotorLeft, #paramMotorRight {
+    float: left;
+    width: 42%;
+    margin: 0 2% 0 2%
+}
+
+#paramMotorSubmit {
+    clear: both;
+    text-align: right
+}
+
+#paramMotorSubmit input {
+    margin: 2%
+}
+
+.notice {
+    padding-left: 24px;
+    background: transparent url('notice.png') no-repeat;
+    color: #03C;
+    font-weight: bold
+}
+
+.warning {
+    padding-left: 24px;
+    background: transparent url('warning.png') no-repeat;
+    color: #F90;
+    font-weight: bold
+}
+
+.error {
+    padding-left: 24px;
+    background: transparent url('error.png') no-repeat;
+    color: #E03;
+    font-weight: bold
+}
+
+.tor_on {
+    background: transparent url('tor_on.png') no-repeat
+}
+
+.tor_off {
+    background: transparent url('tor_off.png') no-repeat
+}
+
+#sensors_tor {
+    position: relative;
+    margin-left: 200px
+}
+
+#sensors_tor_0, #sensors_tor_1, #sensors_tor_2, #sensors_tor_3, #sensors_tor_4, #sensors_tor_5, #sensors_tor_6, #sensors_tor_7, #sensors_tor_8, #sensors_tor_9, #sensors_tor_10, #sensors_tor_11, #sensors_tor_12, #sensors_tor_13, #sensors_tor_14, #sensors_tor_15 {
+    position: absolute;
+    padding-left: 16px;
+    white-space: nowrap
+}
+
+#sensors_tor_0 {
+    left: 50px;
+    top: 90px
+}
+
+#sensors_tor_1 {
+    left: 60px;
+    top: 210px
+}
+
+#sensors_tor_2 {
+    left: -10px;
+    top: 85px
+}
+
+#sensors_tor_3 {
+    left: -10px;
+    top: 185px
+}
+
+#sensors_tor_4 {
+    left: 180px;
+    top: 248px
+}
+
+#sensors_tor_5 {
+    left: 230px;
+    top: 208px
+}
+
+#sensors_tor_6 {
+    left: 251px;
+    top: 158px
+}
+
+#sensors_tor_7 {
+    left: 230px;
+    top: 50px
+}
+
+#sensors_tor_8 {
+    left: 180px;
+    top: 10px
+}
+
+#sensors_tor_9 {
+    left: 251px;
+    top: 100px
+}
+
+#sensors_tor_10 {
+    left: 351px;
+    top: 158px
+}
+
+#sensors_tor_11 {
+    left: 351px;
+    top: 100px
+}
+
+#sensors_tor_12 {
+    left: 350px;
+    top: 260px
+}
+
+#sensors_tor_13 {
+    left: 420px;
+    top: 260px
+}
+
+#sensors_tor_14 {
+    left: -100px;
+    top: 85px
+}
+
+#sensors_tor_15 {
+    left: -100px;
+    top: 185px
+}
+

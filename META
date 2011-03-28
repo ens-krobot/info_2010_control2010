@@ -1,0 +1,9 @@
+# -*- conf -*-
+name = "krobot"
+version = "0.1"
+description = "Krobot client library"
+requires = "obus"
+archive(byte) = "krobot.cma"
+archive(native) = "krobot.cmxa"
+archive(plugin,byte) = "krobot.cma"
+archive(plugin,native) = "krobot.cmxs"

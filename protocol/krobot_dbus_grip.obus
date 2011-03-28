@@ -1,0 +1,39 @@
+(*
+ * krobot_dbus_grip.obus
+ * ---------------------
+ * Copyright : (c) 2010, Jeremie Dimino <jeremie@dimino.org>
+ * Licence   : BSD3
+ *
+ * This file is a part of [kro]bot.
+ *)
+
+(** Control of the grip *)
+
+interface fr.krobot.Service.Grip {
+  (**
+   * Raise the grip, empty of with an ear. It returns whether
+   * the operation succeed. If the ear is a fake, it returns [false],
+   * stay down and reopen the grip.
+   *)
+  method up : () -> (result : boolean)
+
+  (**
+   * Lower the grip.
+   *)
+  method down : () -> ()
+
+  (**
+   * Open the grip so it can take an ear.
+   *)
+  method open : () -> ()
+
+  (**
+   * Close the grip to take an ear.
+   *)
+  method close : () -> ()
+
+  (**
+   * Release the grip when it is up, to release the ear.
+   *)
+  method release : () -> ()
+}

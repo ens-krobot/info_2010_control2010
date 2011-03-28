@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=fr.krobot.Service.Grip
+Exec=@PREFIX@/bin/krobot-service-grip

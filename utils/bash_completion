@@ -1,0 +1,36 @@
+# -*- shell-script -*-
+
+_krobot_command()
+{
+        local cur
+
+        COMPREPLY=()
+        cur=${COMP_WORDS[COMP_CWORD]}
+
+        COMPREPLY=($(compgen -W "$($1 -complete)" -- $cur))
+}
+
+COMMANDS="
+driver
+move
+turn
+controller
+jack
+joystick
+recorder
+record-infrared
+servos-control
+write-lcd
+service-claws
+service-gate
+service-grip
+service-motors
+service-sensors
+service-turret
+infrareds-stop
+range-finders-stop
+"
+
+for cmd in $COMMANDS; do
+    complete -F _krobot_command krobot-$cmd
+done

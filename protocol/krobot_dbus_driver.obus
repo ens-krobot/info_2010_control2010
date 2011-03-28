@@ -1,0 +1,484 @@
+(*
+ * krobot_dbus_driver.obus
+ * -----------------------
+ * Copyright : (c) 2010, Jeremie Dimino <jeremie@dimino.org>
+ * Licence   : BSD3
+ *
+ * This file is a part of [kro]bot.
+ *)
+
+(** Lowlevel access to devices through D-Bus *)
+
+(** Interfaces defined in this file are implemented by the krobot
+    driver. They are used by the krobot manager to offer high-level
+    commands to clients. Clients may also use these low-level
+    interfaces for testing purpose. *)
+
+(**
+ * +-----------------------------------------------------------------+
+ * | Interface implemented by all cards of the robot                 |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.Card {
+  (**
+   * Possible states of the card.
+   *)
+  enum state : uint32 {
+    0: up
+    1: down
+  }
+
+  (**
+   * The name of the card.
+   *)
+  property_r name : string
+
+  (**
+   * State of the card.
+   *)
+  property_r state : state
+}
+
+(**
+ * +-----------------------------------------------------------------+
+ * | Interface implemented by all USB cards of the robot             |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.USBCard {
+  (**
+   * Reads the date the firmware was built.
+   *)
+  method get_firmware_build : () -> (date : string)
+
+  (**
+   * Returns a description of the card.
+   *)
+  method get_board_info : () -> (info : string)
+
+  (**
+   * Returns the state of the ports of the micro-controller.
+   *)
+  method get_ports_state : () -> (states : int32 array)
+
+  (**
+   * Puts the card into bootloader mode.
+   *)
+  method bootloader : () -> ()
+
+  (**
+   * Try to reset the card. It does not works if the card is
+   * in bootloader mode or is crashed.
+   *)
+  method reset : () -> ()
+
+  (**
+   * Trigger card's tests.
+   *)
+  method test : () -> ()
+}
+
+(**
+ * +-----------------------------------------------------------------+
+ * | Control of the electronic compass                               |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.Compass {
+  (**
+   * Reads the current measured value of the compass
+   *)
+  method get_measure : () -> (value : int32)
+}
+
+(**
+ * +-----------------------------------------------------------------+
+ * | Dynamixel servos                                                |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.Dynamixel {
+  (**
+   * Send a ping packet to the servo and wait for its reply.
+   *)
+  method ping : (id : int32) -> ()
+
+  (**
+   * Performs any writing instruction preprared by [RegSet]
+   *)
+  method action : (id : int32) -> ()
+
+  (**
+   * Reset the given servo
+   *)
+  method reset : (id : int32) -> ()
+
+  (**
+   * All readable registers.
+   *)
+  enum readable_register : uint32 {
+    0x00: model_number
+    0x02: version_of_firmware
+    0x03: id
+    0x04: baud_rate
+    0x05: return_delay_time
+    0x06: cw_angle_limit
+    0x08: ccw_angle_limit
+    0x0b: highest_limit_temperature
+    0x0c: lowest_limit_voltage
+    0x0d: highest_limit_voltage
+    0x0e: max_torque
+    0x10: status_return_level
+    0x11: alarm_led
+    0x12: alarm_shutdown
+    0x14: down_calibration
+    0x16: up_calibration
+    0x18: torque_enable
+    0x19: led
+    0x1a: cw_compliance_margin
+    0x1b: ccw_compliance_margin
+    0x1c: cw_compliance_slope
+    0x1d: ccw_compliance_slope
+    0x1e: goal_position
+    0x20: moving_speed
+    0x22: torque_limit
+    0x24: present_position
+    0x26: present_speed
+    0x28: present_load
+    0x2a: present_voltage
+    0x2b: present_temperature
+    0x2c: registered_instruction
+    0x2e: moving
+    0x2f: lock
+    0x30: punch
+  }
+
+  (**
+   * all writable registers.
+   *)
+  enum writable_register : uint32 {
+    0x03: id
+    0x04: baud_rate
+    0x05: return_delay_time
+    0x06: cw_angle_limit
+    0x08: ccw_angle_limit
+    0x0b: highest_limit_temperature
+    0x0c: lowest_limit_voltage
+    0x0d: highest_limit_voltage
+    0x0e: max_torque
+    0x10: status_return_level
+    0x11: alarm_led
+    0x12: alarm_shutdown
+    0x18: torque_enable
+    0x19: led
+    0x1a: cw_compliance_margin
+    0x1b: ccw_compliance_margin
+    0x1c: cw_compliance_slope
+    0x1d: ccw_compliance_slope
+    0x1e: goal_position
+    0x20: moving_speed
+    0x22: torque_limit
+    0x2c: registered_instruction
+    0x2f: lock
+    0x30: punch
+  }
+
+  (**
+   * Reads an integer at the given address.
+   *)
+  method get : (id : int32, address : readable_register) -> (value : uint32)
+
+  (**
+   * Writes an integer at the given address.
+   *)
+  method set : (id : uint32, address : writable_register, value : uint32) -> ()
+
+  (**
+   * Prepare writing of an integer at the given address.
+   *)
+  method reg_set : (id : uint32, address : writable_register, value : uint32) -> ()
+
+  (**
+   * +---------------------------------------------------------------+
+   * | High-level interface                                          |
+   * +---------------------------------------------------------------+
+   *)
+
+  (**
+   * Execution mode for a command.
+   *)
+  enum exec_mode : uint32 {
+    (**
+     * Executes the command immediatly.
+     *)
+    0: now
+
+    (**
+     * Executes the command when [action] is triggered.
+     *)
+    1: action
+  }
+
+  (**
+   * Move the servo to the given position at the given speed.
+   *)
+  method goto : (id : uint32, position : uint32, speed : uint32, mode : exec_mode) -> ()
+
+  (**
+   * Configure the given servo.
+   *)
+  method config : (id : uint32) -> ()
+
+  (**
+   * Gets the current position of the servo.
+   *)
+  method get_position : (id : uint32) -> (position : uint32)
+
+  (**
+   * Gets the current velocity of the servo.
+   *)
+  method get_speed : (id : uint32) -> (speed : uint32)
+}
+
+
+(**
+ * +-----------------------------------------------------------------+
+ * | Logic sensors                                                   |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.LogicSensors {
+  (**
+   * Returns the state of the logic sensors.
+   *)
+  method get_state : () -> (logic_sensors : boolean array)
+}
+
+(**
+ * +-----------------------------------------------------------------+
+ * | Range finders                                                   |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.RangeFinders {
+  (**
+   * Start a measure on the given rage finder.
+   *)
+  method measure : (id : int32) -> ()
+
+  (**
+   * Returns the value measured by a range finder.
+   *)
+  method get : (id : int32) -> (value : int32)
+}
+
+(**
+ * +-----------------------------------------------------------------+
+ * | Motors for the wheels                                           |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.Motors {
+  (**
+   * +---------------------------------------------------------------+
+   * | Trajectories                                                  |
+   * +---------------------------------------------------------------+
+   *)
+
+  (**
+   * Notes:
+   * - all distances are given in meter
+   * - all angles are given in radiant
+   *)
+
+  (**
+   * Move the robot forward of backward.
+   *)
+  method move : (distance : double, velocity : double, acceleration : double) -> ()
+
+  (**
+   * Turn to the right or the left by the given angle.
+   *)
+  method turn : (angle : double, velocity : double, acceleration : double) -> ()
+
+  (**
+   * +---------------------------------------------------------------+
+   * | Lowlevel motors control                                       |
+   * +---------------------------------------------------------------+
+   *)
+
+  (**
+   * Describe on which motor(s) a method should have effect.
+   *)
+  enum motor : int32 {
+    -1: left
+     0: both
+    +1: right
+  }
+
+  (**
+   * How to stop a motor.
+   *)
+  enum stop_mode : uint32 {
+    0: off
+    1: abrupt
+    2: smooth
+  }
+
+  (**
+   * Stop the given motor(s).
+   *)
+  method stop : (motor : motor, mode : stop_mode) -> ()
+
+  (**
+   * Set motors velocities for the given amount of time.
+   *)
+  method set_velocities : (velocity_r : double, velocity_l : double, duration : double) -> ()
+
+  (**
+   * Returns the current velocities of the motors.
+   *)
+  method get_current_velocities : () -> (velocity_r : double, velocity_l : double)
+
+  (**
+   * Returns the current positions of the motors.
+   *)
+  method get_current_positions : () -> (position_r : double, position_l : double)
+
+  (**
+   * +---------------------------------------------------------------+
+   * | Configuration                                                 |
+   * +---------------------------------------------------------------+
+   *)
+
+  (**
+   * Reads motors configuration
+   *)
+  method get_config : () -> (kp_r : uint32, ki_r : uint32, kd_r : uint32, li_r : uint32,
+                             kp_l : uint32, ki_l : uint32, kd_l : uint32, li_l : uint32)
+
+  (**
+   * Writes motors configuration
+   *)
+  method set_config : (motor : motor, kp : uint32, ki : uint32, kd : uint32, li : uint32) -> ()
+}
+
+(**
+ * +-----------------------------------------------------------------+
+ * | Analogic servos                                                 |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.AnalogicServos {
+  (**
+   * Enable and disable the given servos
+   *)
+  method set_config : (enable : uint32 array, disable : uint32 array) -> ()
+
+  (**
+   * Set the state of the given servos. The argument is a list of
+   * (id, position).
+   *)
+  method set_state : (states : (uint32, int32) dict) -> ()
+}
+
+(**
+ * +-----------------------------------------------------------------+
+ * | LCD                                                             |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.LCD {
+  (**
+   * Clear the contents of the LCD.
+   *)
+  method clear : () -> ()
+
+  (**
+   * Show/hide the cursor
+   *)
+  method set_cursor : (state : boolean) -> ()
+
+  (**
+   * Turn on/off the LCD backlight
+   *)
+  method set_backlight : (state : boolean) -> ()
+
+  (**
+   * Go to the given position
+   *)
+  method goto : (line : int32, column : int32) -> ()
+
+  (**
+   * Write something at the current position
+   *)
+  method write : (text : string) -> ()
+
+  (**
+   * Write something on the given line
+   *)
+  method write_line : (line : int32, text : string) -> ()
+}
+
+(**
+ * +-----------------------------------------------------------------+
+ * | Power consumption                                               |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.Power {
+  (**
+   * Enable/disable the card buzzer
+   *)
+  method set_buzzer_state : (state : boolean) -> ()
+
+  (**
+   * Returns the voltage of all the 8 cells of the batteries
+   *)
+  method get_cell_voltage : () -> (states : int32 array)
+
+  (**
+   * Returns the current consumption
+   *)
+  method get_current : () -> (current : int32)
+
+  (**
+   * Returns whether the power is present
+   *)
+  method get_power_state : () -> (state : boolean)
+
+  (**
+   * Possible states of the batteries
+   *)
+  enum battery_state : uint32 {
+    0: disconnected
+    1: low
+    2: middle
+    3: full
+  }
+
+  (**
+   * Returns the sate of the batteries
+   *)
+  method get_battery_state : () -> (state : battery_state)
+}
+
+(**
+ * +-----------------------------------------------------------------+
+ * | The analogic motor for the gate                                 |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.AnalogicMotor {
+  (**
+   * Enable/disable the motor
+   *)
+  method set_state : (state : boolean) -> ()
+
+  (**
+   * Set the velocity of the motor for the given duration
+   *)
+  method set_velocity : (velocity : uint32, duration : double) -> ()
+}
+
+(**
+ * +-----------------------------------------------------------------+
+ * | Infrared sensors                                                |
+ * +-----------------------------------------------------------------+
+ *)
+interface fr.krobot.LowLevel.Infrareds {
+  (**
+   * Returns the state of the 4 infrared sensors
+   *)
+  method get : () -> (states : int32 array)
+}

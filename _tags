@@ -1,0 +1,23 @@
+# -*- conf -*-
+
+# Uses the lwt syntax extension for all files:
+<**/*.ml>: syntax(camlp4o), package(lwt.syntax), package(lwt.syntax.log)
+
+# Use the obus syntax extension for all files:
+<**/*.ml>: package(obus.syntax)
+
+# Libraries used by all part of the robot:
+<**/*> and not <**/*.cm{a,xa,xs}>: package(obus), package(lwt.text)
+
+# Only the driver and card tools have access to the hardware. The rest
+# should be compilable even without ocaml-usb and ocaml-serial.
+<{driver,usb-tools}/**/*>: package(usb), package(serial)
+
+# SDL is used to access the sixaxis controller
+<clients/krobot_joystick.*>: package(sdl)
+
+# The python generator needs to read IDL files
+<python/generate.*>: package(obus.idl)
+
+# The simulator uses GTK
+<simulator/*>: package(lablgtk2), package(lablgtk2.glade), package(cairo), package(cairo.lablgtk2), package(lwt.glib)

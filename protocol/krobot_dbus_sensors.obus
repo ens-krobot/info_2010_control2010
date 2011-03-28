@@ -1,0 +1,41 @@
+(*
+ * krobot_dbus_sensors.obus
+ * ------------------------
+ * Copyright : (c) 2010, Jeremie Dimino <jeremie@dimino.org>
+ * Licence   : BSD3
+ *
+ * This file is a part of [kro]bot.
+ *)
+
+(** Measurement of various sensors of the robot *)
+
+interface fr.krobot.Service.Sensors {
+  (**
+   * Colors
+   *)
+  enum color : uint32 {
+    0: blue
+    1: yellow
+  }
+
+  (**
+   * The selected color.
+   *)
+  property_r color : color
+
+  (**
+   * Property holding the current values measured by the infrareds.
+   *)
+  property_r infrareds : int32 array
+
+  (**
+   * States of the logic sensors.
+   *)
+  property_r logic_sensors : boolean array
+
+  (**
+   * States of the range sensors.
+   *)
+  property_r range_finders : int32 array
+}
+

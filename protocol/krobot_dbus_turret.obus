@@ -1,0 +1,34 @@
+(*
+ * krobot_dbus_turret.obus
+ * -----------------------
+ * Copyright : (c) 2010, Jeremie Dimino <jeremie@dimino.org>
+ * Licence   : BSD3
+ *
+ * This file is a part of [kro]bot.
+ *)
+
+(** Control of the turrent in front of the robot *)
+
+interface fr.krobot.Service.Turret {
+  (**
+   * Mote the turret to a certain position. [angle] must between
+   * [-pi/2] and [pi/2].
+   *)
+  method goto : (angle : double) -> ()
+
+  (**
+   * Scan the front of the robot and returns the distance measured
+   * for each angle.
+   *)
+  method scan : () -> (values : (double, double) dict)
+
+  (** Scan the front the robot, and returns:
+   *
+   * - the angle the robot must turn to take the ear
+   * - the distance the robot must move to take the ear
+   *
+   * It raises "fr.krobot.Error.NoEartFound" if no ear
+   * is found at the front of the robot.
+   *)
+  method find : () -> (angle : double, distance : double)
+}

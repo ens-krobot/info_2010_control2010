@@ -1,0 +1,31 @@
+(*
+ * krobot_dbus_gate.obus
+ * ---------------------
+ * Copyright : (c) 2010, Jeremie Dimino <jeremie@dimino.org>
+ * Licence   : BSD3
+ *
+ * This file is a part of [kro]bot.
+ *)
+
+(** Control of the gate which retains/release the ears *)
+
+interface fr.krobot.Service.Gate {
+  (**
+   * Enable/disable the motor of the gate
+   *)
+  method enable : () -> ()
+  method disable : () -> ()
+
+  method close : () -> ()
+  method open : () -> ()
+
+  (**
+   * Keep the gate closed forever.
+   *)
+  method hold_closed : () -> ()
+
+  (**
+   * Stop holding the gate.
+   *)
+  method stop : () -> ()
+}
